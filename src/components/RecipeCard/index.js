@@ -78,11 +78,12 @@ export default function RecipeCard(props) {
               <ListItemIcon>
                 <DescriptionIcon />
               </ListItemIcon>
-              <div
+              {/* <ListItemText primary={autop(description)} /> */}
+              {/* <div
                 dangerouslySetInnerHTML={{
                   __html: autop(description),
                 }}
-              />
+              /> */}
             </ListItem>
           ) : (
             ""
