@@ -1,0 +1,18 @@
+Bootstrap CDNs added to index.html... for now 
+Basic routing done (link to all pages added to header to ease access during dev phase)
+
+npx: create-react-app,
+
+npm i:
+react-router-dom
+material-ui
+nano-id
+@mui/material @mui/icons-material @emotion/styled @emotion/react
+
+
+things to consider:
+RecipeCard, RecipeDetails (+ 404 redirect), ingredients, instructions
+
+checklist for ingredients, instructions (checkable, deletable, re-organizable?)
+unordered for ingred, ordered for instructions
+rating e.g. 5/5 stars?

@@ -1,25 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./reset.css";
 
-function App() {
+import LandingPage from "./pages/LandingPage";
+import Home from "./pages/Home";
+import RecipeAdd from "./pages/RecipeAdd";
+import RecipeDetails from "./pages/RecipeDetails";
+import RecipeEdit from "./pages/RecipeEdit";
+import PageNotFound from "./pages/PageNotFound";
+
+export default function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/add" element={<RecipeAdd />} />{" "}
+        <Route path="/recipe/:id" element={<RecipeDetails />} />
+        <Route path="/recipe/:id/edit" element={<RecipeEdit />} />
+        <Route path="*" element={<PageNotFound />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
-
-export default App;
