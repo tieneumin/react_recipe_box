@@ -78,7 +78,7 @@ export default function Form(props) {
         // get recipes from local storage
         // ! if passed as prop, recipes=undefined in RecipeAdd scenario causes recipes=[] overwrite whenever recipe added .'. recipes not passed as prop
         let recipes = JSON.parse(localStorage.getItem("recipes"));
-        // ensure recipe exists (prevents no recipes error)
+        // ensure recipes exists (prevents no recipes error)
         if (!recipes) recipes = [];
         // add recipe to recipes
         recipes.push(newRecipe);
@@ -92,7 +92,7 @@ export default function Form(props) {
       if (type === "edit") {
         // get recipes from local storage
         const recipes = JSON.parse(localStorage.getItem("recipes"));
-        // update selected recipe in recipes
+        // update selected recipe for recipes array
         const updatedRecipes = recipes.map((r) => {
           // overwrite selected recipe only
           if (r.id === id) {

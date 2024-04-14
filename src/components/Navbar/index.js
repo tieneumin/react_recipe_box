@@ -9,23 +9,21 @@ export default function Navbar() {
         // color="secondary"
         sx={{ mb: 3 }}
       >
-        <Toolbar>
-          <Typography variant="h6" style={{ flexGrow: 1 }}>
-            <Link to="/home" style={{ color: "white", textDecoration: "none" }}>
-              Recipe Box
-            </Link>
-          </Typography>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Button
             color="inherit"
             component={Link}
-            to="/add"
-            // sx={{
-            //   backgroundColor: "grey",
-            //   "&:hover": {
-            //     backgroundColor: "red",
-            //   },
-            // }}
+            to="/home"
+            style={{ textTransform: "capitalize" }}
           >
+            <Typography variant="h6">Recipe Box</Typography>
+          </Button>
+          <Button color="inherit" component={Link} to="/add">
             Add Recipe
           </Button>
         </Toolbar>

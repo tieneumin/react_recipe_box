@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-import { Card, Container } from "@mui/material";
+import { Container } from "@mui/material";
 
 import Navbar from "../../components/Navbar";
 import RecipeCard from "../../components/RecipeCard";
-import Ingredients from "./ingredients";
-import Instructions from "./instructions";
+import Checklist from "../../components/Checklist";
 import NotFound from "../../components/NotFound";
 
 export default function RecipeDetails() {
@@ -14,7 +13,7 @@ export default function RecipeDetails() {
   const { id } = useParams();
   // get recipes from local storage
   let recipes = JSON.parse(localStorage.getItem("recipes"));
-  // ensure recipe exists (prevents URL manipulation error)
+  // ensure recipes exists (prevents URL manipulation error)
   if (!recipes) recipes = [];
   // get recipe that matches id
   const recipe = recipes.find((r) => r.id === id);
@@ -27,50 +26,62 @@ export default function RecipeDetails() {
     recipe ? recipe.instructions : []
   );
 
+  // ensure child-level ingredient changes (add, toggle, delete) reflect/stored in parent/local storage
+  const ingredientsUpdate = (updatedIngredients) => {
+    setIngredients(updatedIngredients);
+    // update selected recipe's ingredients for recipes array
+    const updatedRecipes = recipes.map((r) => {
+      // overwrite only selected recipe's ingredients
+      if (r.id === id) {
+        return {
+          ...r,
+          ingredients: updatedIngredients,
+        };
+      }
+      // return others as is
+      return r;
+    });
+    // store updated recipes back in local storage
+    localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
+  };
+
+  // ensure child-level instruction changes (add, toggle, delete) reflect/stored in parent/local storage
+  const instructionsUpdate = (updatedInstructions) => {
+    setInstructions(updatedInstructions);
+    // update selected recipe's instructions for recipes array
+    const updatedRecipes = recipes.map((r) => {
+      // overwrite only selected recipe's instructions
+      if (r.id === id) {
+        return {
+          ...r,
+          instructions: updatedInstructions,
+        };
+      }
+      // return others as is
+      return r;
+    });
+    // store updated recipes back in local storage
+    localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
+  };
+
   return (
     <>
       <Navbar />
-      {/* 404 if RecipeDetails id not found (URL manipulation) */}
+      {/* 404 if RecipeDetails id not found (prevents URL manipulation error) */}
       {recipe === undefined ? (
         <NotFound type="recipe" />
       ) : (
-        <Container maxWidth="sm">
-          <RecipeCard type="recipe" recipe={recipe} />
-          <Ingredients
-            ingredients={ingredients}
-            onUpdate={(newIngredients) => {
-              setIngredients(newIngredients);
-              // update recipes into the local storage
-              const updatedRecipes = recipes.map((r) => {
-                if (r.id === id) {
-                  return {
-                    ...r,
-                    ingredients: newIngredients,
-                  };
-                }
-                return r;
-              });
-              // store the updated recipe array into local storage
-              localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
-            }}
+        <Container maxWidth="md">
+          <RecipeCard type="details" recipes={recipes} recipe={recipe} />
+          <Checklist
+            type="ingredient"
+            items={ingredients}
+            onUpdate={ingredientsUpdate}
           />
-          <Instructions
-            instructions={instructions}
-            onUpdate={(newInstructions) => {
-              setInstructions(newInstructions);
-              // update recipes into the local storage
-              const updatedRecipes = recipes.map((r) => {
-                if (r.id === id) {
-                  return {
-                    ...r,
-                    instructions: newInstructions,
-                  };
-                }
-                return r;
-              });
-              // store the updated recipe array into local storage
-              localStorage.setItem("recipes", JSON.stringify(updatedRecipes));
-            }}
+          <Checklist
+            type="instruction"
+            items={instructions}
+            onUpdate={instructionsUpdate}
           />
         </Container>
       )}

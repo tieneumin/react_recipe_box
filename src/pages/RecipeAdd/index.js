@@ -1,7 +1,7 @@
+import { Container, Typography } from "@mui/material";
+
 import Navbar from "../../components/Navbar";
 import Form from "../../components/Form";
-
-import { Container, Typography } from "@mui/material";
 
 export default function RecipeAdd() {
   return (

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
 import backgroundImage from "../../assets/001.jpeg";
 
 export default function LandingPage() {

@@ -1,8 +1,5 @@
 import { Link } from "react-router-dom";
 
-import Navbar from "../../components/Navbar";
-import RecipeCard from "../../components/RecipeCard";
-
 import {
   Button,
   Card,
@@ -13,10 +10,13 @@ import {
   Typography,
 } from "@mui/material";
 
+import Navbar from "../../components/Navbar";
+import RecipeCard from "../../components/RecipeCard";
+
 export default function Home() {
   // get recipes from local storage
   let recipes = JSON.parse(localStorage.getItem("recipes"));
-  // ensure recipe exists (prevents no recipes error)
+  // ensure recipes exists (prevents no recipes error)
   if (!recipes) recipes = [];
 
   return (
@@ -26,6 +26,7 @@ export default function Home() {
         <Typography variant="h4" gutterBottom>
           All Recipes
         </Typography>
+        {/* prompt to add recipe if none */}
         {recipes.length === 0 ? (
           <Card>
             <CardContent>

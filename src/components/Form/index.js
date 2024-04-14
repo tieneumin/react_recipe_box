@@ -8,7 +8,6 @@ import {
   CardContent,
   Grid,
   IconButton,
-  styled,
   TextField,
 } from "@mui/material";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -16,10 +15,11 @@ import ClearIcon from "@mui/icons-material/Clear";
 
 export default function Form(props) {
   const { type, id, recipe } = props;
+  // console.log(type); // add / edit
+  // console.log(id); // undefined / OK
+  // console.log(recipe); // undefined / OK
+
   const navigate = useNavigate();
-  // console.log(type);
-  // console.log(id);
-  // console.log(recipe);
 
   // ? : considers both RecipeAdd, RecipeEdit
   const [name, setName] = useState(recipe ? recipe.name : "");
@@ -58,15 +58,18 @@ export default function Form(props) {
     if (error !== "") {
       alert(error);
     } else {
-      // if no error, 1) add recipe OR 2) updated selected recipe
+      // if no error, 1) add new recipe OR 2) update selected recipe
 
       // get recipes from local storage
-      // if passed as RecipeEdit prop, recipes=undefined in RecipeAdd scenario always causes recipes=[] overwrite .'. not passed as prop
+      // ! if passed as RecipeEdit prop, recipes=undefined in RecipeAdd scenario always causes recipes=[] overwrite .'. not passed as prop
       let recipes = JSON.parse(localStorage.getItem("recipes"));
 
       // 1) ADD
       if (type === "add") {
-        const newRecipe = {
+        // ensure recipes exists (prevents no recipes error)
+        if (!recipes) recipes = [];
+        // add recipe to recipes
+        recipes.push({
           id: nanoid(),
           name,
           duration,
@@ -75,11 +78,7 @@ export default function Form(props) {
           imageName,
           ingredients: [],
           instructions: [],
-        };
-        // ensure recipe exists (prevents no recipes error)
-        if (!recipes) recipes = [];
-        // add recipe to recipes
-        recipes.push(newRecipe);
+        });
         // store updated recipes back in local storage
         localStorage.setItem("recipes", JSON.stringify(recipes));
         // redirect back to home page
@@ -88,7 +87,7 @@ export default function Form(props) {
 
       // 2) EDIT
       if (type === "edit") {
-        // update selected recipe in recipes
+        // update selected recipe for recipes array
         const updatedRecipes = recipes.map((r) => {
           // overwrite selected recipe only
           if (r.id === id) {
@@ -101,6 +100,7 @@ export default function Form(props) {
               imageName,
             };
           }
+          // return others as is
           return r;
         });
         // store updated recipes back in local storage
@@ -112,12 +112,6 @@ export default function Form(props) {
   };
   // end of formSubmit
 
-  // CSS to hide default <input type="file">
-  const VisuallyHiddenInput = styled("input")({
-    height: 0,
-    width: 0,
-  });
-
   return (
     <>
       <Card>
@@ -127,19 +121,19 @@ export default function Form(props) {
               <TextField
                 required
                 fullWidth
+                autoFocus
                 label="Dish name (e.g. spaghetti)"
                 value={name}
                 onChange={(e) => {
                   setName(e.target.value);
                 }}
-                autoFocus
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                label="Time to prepare (e.g. 15m)"
+                label="Time to prepare (e.g. 15 minutes)"
                 value={duration}
                 onChange={(e) => {
                   setDuration(e.target.value);
@@ -150,7 +144,7 @@ export default function Form(props) {
               <TextField
                 fullWidth
                 multiline
-                rows={3}
+                rows={5}
                 label="Description"
                 value={description}
                 onChange={(e) => {
@@ -164,13 +158,22 @@ export default function Form(props) {
                 variant="outlined"
                 startIcon={<CloudUploadIcon />}
               >
-                {/* Upload Image button shows image name once image attached */}
+                {/* show image name once image attached */}
                 {imageName ? imageName : "Upload Image (16:9 recommended)"}
-                <VisuallyHiddenInput type="file" onChange={imageUpload} />
+                {/* CSS hides default <input type="file"> */}
+                <input
+                  type="file"
+                  style={{ height: "0", width: "0" }}
+                  onChange={imageUpload}
+                />
               </Button>
-              {/* show icon to clear image if image attached*/}
+              {/* show button to clear image if image attached*/}
               {image ? (
-                <IconButton color="primary" sx={{ py: 0 }} onClick={imageClear}>
+                <IconButton
+                  color="primary"
+                  sx={{ p: 0.5 }}
+                  onClick={imageClear}
+                >
                   <ClearIcon />
                 </IconButton>
               ) : (
